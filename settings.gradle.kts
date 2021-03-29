@@ -1,0 +1,1 @@
+rootProject.name = "java-is-2021"
