@@ -125,7 +125,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
                 .stream()
                 .filter(item -> item.getDay() == day && item.getMonth() == month)
                 .findFirst();
-
+//some comment
         return (DayTemperatureInfo) dayTempInfo.orElse(null);
     }
 
