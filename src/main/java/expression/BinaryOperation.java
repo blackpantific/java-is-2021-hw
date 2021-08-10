@@ -1,11 +1,11 @@
 package expression;
 
-public abstract class BinaryOperation implements  CommonExpression{
+public abstract class BinaryOperation implements  Expression, DoubleExpression, TripleExpression{
 
-    private Expression firstOperand;
-    private Expression secondOperand;
+    private CommonExpression firstOperand;
+    private CommonExpression secondOperand;
 
-    BinaryOperation(Expression firstOp, Expression secondOp){
+    BinaryOperation(CommonExpression firstOp, CommonExpression secondOp){
 
         this.firstOperand = firstOp;
         this.secondOperand = secondOp;
@@ -13,12 +13,18 @@ public abstract class BinaryOperation implements  CommonExpression{
     }
 
     public CommonExpression getFirstOperand() {
-        return (CommonExpression)firstOperand;
+        return firstOperand;
     }
 
+    public void setFirstOperand(Expression firstOperand) {
+        this.firstOperand = firstOperand;
+    }
 
     public CommonExpression getSecondOperand() {
-        return (CommonExpression)secondOperand;
+        return secondOperand;
     }
 
+    public void setSecondOperand(Expression secondOperand) {
+        this.secondOperand = secondOperand;
+    }
 }

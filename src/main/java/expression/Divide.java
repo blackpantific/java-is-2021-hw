@@ -9,17 +9,18 @@ public class Divide extends BinaryOperation{
 
     @Override
     public int evaluate(int x) {
-        return getFirstOperand().evaluate(x) / getSecondOperand().evaluate(x);
+        return ((Expression)getFirstOperand()).evaluate(x) / ((Expression)getSecondOperand()).evaluate(x);
     }
 
     @Override
     public double evaluate(double x) {
-        return 0;
+        return ((DoubleExpression)getFirstOperand()).evaluate(x) / ((DoubleExpression)getSecondOperand()).evaluate(x);
     }
 
 
     @Override
     public int evaluate(int x, int y, int z) {
-        return 0;
+        return ((TripleExpression)getFirstOperand()).evaluate(x, y, z)
+                / ((TripleExpression)getSecondOperand()).evaluate(x, y, z);
     }
 }

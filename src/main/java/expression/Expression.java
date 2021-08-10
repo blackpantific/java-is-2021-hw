@@ -1,5 +1,5 @@
 package expression;
 
-public interface Expression {
+public interface Expression extends CommonExpression {
     int evaluate(int x);
 }
