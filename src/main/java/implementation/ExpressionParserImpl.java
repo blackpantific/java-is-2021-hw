@@ -9,7 +9,6 @@ public class ExpressionParserImpl implements ExpressionParser {
         PLUS, MINUS
     }
 
-
     private Integer sum;
 
     private boolean operand1;
@@ -18,13 +17,14 @@ public class ExpressionParserImpl implements ExpressionParser {
     private boolean operatorExists;
     private OperatorType operator;
 
-
     @Override
     public int parse(String expression) throws ParseException {
 
         InitializeValues();
-
         StringBuilder sb = new StringBuilder();
+
+        if(expression == null)
+            throw new IllegalArgumentException();
 
         for (int i = 0; i < expression.length(); i++) {
 
@@ -53,7 +53,6 @@ public class ExpressionParserImpl implements ExpressionParser {
                         sb.append(c);
 
                         if ((i + 1) < expression.length()) {
-                            //do the same operations
 
                             if (expression.charAt(i + 1) > '9' || expression.charAt(i + 1) < '0') {
 
@@ -63,7 +62,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                         } else {
                             AddNewNumber(sb);
                         }
-                        
+
                     }
             }
 
@@ -82,36 +81,43 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     private void AddNewNumber(StringBuilder sb) throws ParseException {
-        if (operatorExists && sum == null) {
 
-            sum = 0;
-            if (operator == OperatorType.MINUS) {
-                sum -= Integer.parseInt(sb.toString());
-            } else {
+        try {
+
+            if (operatorExists && sum == null) {
+
+                sum = 0;
+                if (operator == OperatorType.MINUS) {
+
+                    sum -= Integer.parseInt(sb.toString());
+                } else {
+                    sum += Integer.parseInt(sb.toString());
+                }
+
+            } else if (!operatorExists && sum == null) {
+
+                sum = 0;
                 sum += Integer.parseInt(sb.toString());
+
+            } else if (operatorExists) {
+
+                if (operator == OperatorType.MINUS) {
+                    sum -= Integer.parseInt(sb.toString());
+                } else {
+                    sum += Integer.parseInt(sb.toString());
+                }
+
+            } else if (!operatorExists) {
+
+                throw new ParseException("Wrong sequence!");
             }
 
-        } else if (!operatorExists && sum == null) {
-
-            sum = 0;
-            sum += Integer.parseInt(sb.toString());
-
-        } else if (operatorExists) {
-
-            if (operator == OperatorType.MINUS) {
-                sum -= Integer.parseInt(sb.toString());
-            } else {
-                sum += Integer.parseInt(sb.toString());
-            }
-
-        } else if (!operatorExists) {
-
-            throw new ParseException("Wrong sequence!");
+            operator = null;
+            operatorExists = false;
+            sb.setLength(0);
+        }catch(NumberFormatException arEx){
+            throw new ParseException("Incorrect input data");
         }
-
-        operator = null;
-        operatorExists = false;
-        sb.setLength(0);
     }
 
 }
