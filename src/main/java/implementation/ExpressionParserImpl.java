@@ -89,22 +89,22 @@ public class ExpressionParserImpl implements ExpressionParser {
                 sum = 0;
                 if (operator == OperatorType.MINUS) {
 
-                    sum -= Integer.parseInt(sb.toString());
+                    sum = Math.subtractExact(sum, Integer.parseInt(sb.toString()));
                 } else {
-                    sum += Integer.parseInt(sb.toString());
+                    sum = Math.addExact(sum, Integer.parseInt(sb.toString()));
                 }
 
             } else if (!operatorExists && sum == null) {
 
                 sum = 0;
-                sum += Integer.parseInt(sb.toString());
+                sum = Math.addExact(sum, Integer.parseInt(sb.toString()));
 
             } else if (operatorExists) {
 
                 if (operator == OperatorType.MINUS) {
-                    sum -= Integer.parseInt(sb.toString());
+                    sum = Math.subtractExact(sum, Integer.parseInt(sb.toString()));
                 } else {
-                    sum += Integer.parseInt(sb.toString());
+                    sum = Math.addExact(sum, Integer.parseInt(sb.toString()));
                 }
 
             } else if (!operatorExists) {
