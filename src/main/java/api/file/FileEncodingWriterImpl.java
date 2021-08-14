@@ -12,31 +12,26 @@ public class FileEncodingWriterImpl implements FileEncodingWriter{
     @Override
     public void write(File file, InputStream data, Charset dataEncoding) {
 
-
-        if(!file.isAbsolute()){
-
-            Path currentRelativePath = Paths.get("");
-            var projectFolderPath = currentRelativePath.toAbsolutePath().toString();
-            var fullPath = Paths.get(projectFolderPath, file.toString());
-            fileCheck(fullPath);
-
-        }else {
-            fileCheck(file.toPath());
-
-        }
-
-
-
+        createFile(file);
 
         try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8)){
 
-            int c = -1;
-            while((c = data.read()) >=0){
-                fileWriter.write(c);
+            var amount = data.available();
+            char[] buffer = new char[amount];
+            StringBuilder out = new StringBuilder();
+            Reader in = new InputStreamReader(data, dataEncoding);
+
+            int numAll = 0;
+
+            for (int numRead; (numRead = in.read(buffer, 0, buffer.length)) > 0; ) {
+                out.append(buffer, 0, numRead);
+                numAll = numRead;
             }
+            char[] toWrite = new char[numAll];
 
-            fileWriter.flush();
+            out.getChars(0, numAll, toWrite, 0);
 
+            fileWriter.write(toWrite);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,6 +39,53 @@ public class FileEncodingWriterImpl implements FileEncodingWriter{
 
     }
 
+    @Override
+    public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
+
+        var charset = StandardCharsets.UTF_8;
+
+        createFile(file);
+
+        if(fileEncoding != null){
+            charset = fileEncoding;
+        }
+
+        try (FileWriter fileWriter = new FileWriter(file, charset)){
+
+            var amount = data.available();
+            char[] buffer = new char[amount];
+            StringBuilder out = new StringBuilder();
+            Reader in = new InputStreamReader(data, dataEncoding);
+
+            int numAll = 0;
+
+            for (int numRead; (numRead = in.read(buffer, 0, buffer.length)) > 0; ) {
+                out.append(buffer, 0, numRead);
+                numAll = numRead;
+            }
+            char[] toWrite = new char[numAll];
+
+            out.getChars(0, numAll, toWrite, 0);
+
+            fileWriter.write(toWrite);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void createFile(File file) {
+        if(!file.isAbsolute()){
+
+            Path currentRelativePath = Paths.get("");
+            var projectFolderPath = currentRelativePath.toAbsolutePath().toString();
+            var fullPath = Paths.get(projectFolderPath, file.toString());
+            fileCheck(fullPath);
+        }else {
+            fileCheck(file.toPath());
+        }
+    }
 
     private void fileCheck(Path path){
         if(Files.exists(path))
@@ -55,9 +97,6 @@ public class FileEncodingWriterImpl implements FileEncodingWriter{
 
             try {
                 var newFile = Files.createDirectories(parentFolderPath);
-
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -74,40 +113,4 @@ public class FileEncodingWriterImpl implements FileEncodingWriter{
         }
     }
 
-    @Override
-    public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
-
-        var charset = StandardCharsets.UTF_8;
-
-        if(!file.isAbsolute()){
-
-            Path currentRelativePath = Paths.get("");
-            var projectFolderPath = currentRelativePath.toAbsolutePath().toString();
-            var fullPath = Paths.get(projectFolderPath, file.toString());
-            fileCheck(fullPath);
-
-        }else {
-            fileCheck(file.toPath());
-
-        }
-        if(fileEncoding != null){
-            charset = fileEncoding;
-        }
-
-
-        try (FileWriter fileWriter = new FileWriter(file, fileEncoding)){
-
-            int c = -1;
-            while((c = data.read()) >=0){
-                fileWriter.write((char)c);
-            }
-
-            fileWriter.flush();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 }
