@@ -10,9 +10,7 @@ public class FileEncodingReaderImpl implements FileEncodingReader{
     @Override
     public Reader read(File file, Charset fileEncoding) {
         FileReader fileReader = null;
-
         try {
-
             fileReader = new FileReader(file, fileEncoding);
 
         } catch (IOException e) {

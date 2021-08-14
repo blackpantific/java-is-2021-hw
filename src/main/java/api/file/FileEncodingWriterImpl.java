@@ -16,22 +16,7 @@ public class FileEncodingWriterImpl implements FileEncodingWriter{
 
         try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8)){
 
-            var amount = data.available();
-            char[] buffer = new char[amount];
-            StringBuilder out = new StringBuilder();
-            Reader in = new InputStreamReader(data, dataEncoding);
-
-            int numAll = 0;
-
-            for (int numRead; (numRead = in.read(buffer, 0, buffer.length)) > 0; ) {
-                out.append(buffer, 0, numRead);
-                numAll = numRead;
-            }
-            char[] toWrite = new char[numAll];
-
-            out.getChars(0, numAll, toWrite, 0);
-
-            fileWriter.write(toWrite);
+            writeToFile(data, dataEncoding, fileWriter);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,27 +37,31 @@ public class FileEncodingWriterImpl implements FileEncodingWriter{
 
         try (FileWriter fileWriter = new FileWriter(file, charset)){
 
-            var amount = data.available();
-            char[] buffer = new char[amount];
-            StringBuilder out = new StringBuilder();
-            Reader in = new InputStreamReader(data, dataEncoding);
-
-            int numAll = 0;
-
-            for (int numRead; (numRead = in.read(buffer, 0, buffer.length)) > 0; ) {
-                out.append(buffer, 0, numRead);
-                numAll = numRead;
-            }
-            char[] toWrite = new char[numAll];
-
-            out.getChars(0, numAll, toWrite, 0);
-
-            fileWriter.write(toWrite);
+            writeToFile(data, dataEncoding, fileWriter);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void writeToFile(InputStream data, Charset dataEncoding, FileWriter fileWriter) throws IOException {
+        var amount = data.available();
+        char[] buffer = new char[amount];
+        StringBuilder out = new StringBuilder();
+        Reader in = new InputStreamReader(data, dataEncoding);
+
+        int numAll = 0;
+
+        for (int numRead; (numRead = in.read(buffer, 0, buffer.length)) > 0; ) {
+            out.append(buffer, 0, numRead);
+            numAll = numRead;
+        }
+        char[] toWrite = new char[numAll];
+
+        out.getChars(0, numAll, toWrite, 0);
+
+        fileWriter.write(toWrite);
     }
 
     private void createFile(File file) {
