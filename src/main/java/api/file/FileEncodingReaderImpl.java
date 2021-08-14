@@ -9,16 +9,15 @@ import java.nio.charset.Charset;
 public class FileEncodingReaderImpl implements FileEncodingReader{
     @Override
     public Reader read(File file, Charset fileEncoding) {
-
+        FileReader fileReader = null;
 
         try {
-            FileReader fileReader = new FileReader(file, fileEncoding);
-            return fileReader;
+
+            fileReader = new FileReader(file, fileEncoding);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        return null;
+        return fileReader;
     }
 }
