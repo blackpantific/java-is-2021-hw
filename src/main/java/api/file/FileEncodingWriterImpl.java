@@ -77,10 +77,8 @@ public class FileEncodingWriterImpl implements FileEncodingWriter{
     }
 
     private void fileCheck(Path path){
-        if(Files.exists(path))
+        if(!Files.exists(path))
         {
-            // do some work
-        }else{
 
             var parentFolderPath = path.resolveSibling("");
 
@@ -96,8 +94,6 @@ public class FileEncodingWriterImpl implements FileEncodingWriter{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            // do some work
 
         }
     }
